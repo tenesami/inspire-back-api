@@ -15,12 +15,14 @@ class QuotesController < ApplicationController
 
   # POST /quotes
   def create
-    @quote = Quote.new(quote_params)
+    @user = User.find_or_create_by(username: params[:quote][:username])
+    @quote = @user.quotes.new(quote_params)
 
     if @quote.save
       render json: @quote, status: :created, location: @quote
     else
       render json: @quote.errors, status: :unprocessable_entity
+     
     end
   end
 
@@ -46,6 +48,6 @@ class QuotesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def quote_params
-      params.require(:quote).permit(:topic, :content, :user_id)
+      params.require(:quote).permit(:topic, :content)
     end
 end
