@@ -5,7 +5,7 @@ class QuotesController < ApplicationController
   def index
     @quotes = Quote.all
 
-    render json: @quotes
+    render json: QuoteSerializer.new(@quotes)
   end
 
   # GET /quotes/1
