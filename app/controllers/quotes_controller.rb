@@ -21,7 +21,7 @@ class QuotesController < ApplicationController
     if @quote.save
       render json: @quote, status: :created, location: @quote
     else
-      render json: @quote.errors, status: :unprocessable_entity
+      render json: {errors: @quote.errors.full_messages}, status: :unprocessable_entity
      
     end
   end
