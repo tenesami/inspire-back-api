@@ -5,7 +5,10 @@ class QuotesController < ApplicationController
   def index
     @quotes = Quote.all
 
-    render json: QuoteSerializer.new(@quotes)
+    options = {
+      include: [:user]
+    }
+    render json: QuoteSerializer.new(@quotes, options)
   end
 
   # GET /quotes/1
@@ -18,11 +21,14 @@ class QuotesController < ApplicationController
     @user = User.find_or_create_by(username: params[:quote][:username])
     @quote = @user.quotes.new(quote_params)
 
-    if @quote.save
-      render json: @quote, status: :created, location: @quote
+    if @user.save
+      options = {
+      include: [:user]
+    }
+    render json: QuoteSerializer.new(@quote, options)
     else
-      render json: {errors: @quote.errors.full_messages}, status: :unprocessable_entity
-     
+      render json: {errors: {user: @user.errors.full_messages, quote: @quote.errors.full_messages}}, status: :unprocessable_entity
+
     end
   end
 
